@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -48,8 +49,8 @@ func main() {
 	stacks2 := buildStacks(stackDescriptions)
 	stacks = runMoves(stacks, moves)
 	stacks2 = runMoves2(stacks2, moves)
-	fmt.Println(stacks)
-	fmt.Println(stacks2)
+	printStackTop(stacks)
+	printStackTop(stacks2)
 }
 
 func buildStacks(stackDescriptions []string) map[string][]string {
@@ -63,9 +64,10 @@ func buildStacks(stackDescriptions []string) map[string][]string {
 			}
 			re := regexp.MustCompile(`\d+`)
 			if re.MatchString(entry) {
-				fmt.Printf("Skipping stack labels %s\n", entry)
+				//fmt.Printf("Skipping stack labels %s\n", entry)
 				continue
 			}
+			entry = string(entry[1])
 			stacks[stackLabel] = append(stacks[stackLabel], entry)
 		}
 	}
@@ -75,7 +77,7 @@ func buildStacks(stackDescriptions []string) map[string][]string {
 func runMoves(stacks map[string][]string, moves []string) map[string][]string {
 	for _, moveString := range moves {
 		move := parseMoveString(moveString)
-		fmt.Println(move)
+		//fmt.Println(move)
 		stacks = moveStack(stacks, move)
 	}
 
@@ -84,7 +86,7 @@ func runMoves(stacks map[string][]string, moves []string) map[string][]string {
 func runMoves2(stacks map[string][]string, moves []string) map[string][]string {
 	for _, moveString := range moves {
 		move := parseMoveString(moveString)
-		fmt.Println(move)
+		//fmt.Println(move)
 		stacks = moveStack2(stacks, move)
 	}
 
@@ -134,4 +136,22 @@ func moveStack2(stacks map[string][]string, move Move) map[string][]string {
 	stacks[move.from] = fromStackCopy
 	stacks[move.to] = toStack
 	return stacks
+}
+
+func printStackTop (stacks map[string][]string) {
+	var stackTop []string
+	keys := make([]string, 0, len(stacks))
+	for k := range stacks{
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, stackLabel := range keys {
+		stack := stacks[stackLabel]
+		if len(stack) == 0 {
+			continue
+		}
+		stackTop = append(stackTop, stack[0])
+	}
+	fmt.Println(strings.Join(stackTop,""))
 }
