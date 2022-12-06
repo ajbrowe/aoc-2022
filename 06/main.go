@@ -51,15 +51,15 @@ func processSignal2(signal string) {
 
 
 func hasRepeat(signal string) bool {
-	counts := make(map[string]int)
+	seen := make(map[string]bool)
 	repeatFound := false;
 	for _, character := range signal {
 		letter := string(character)
-		if _, exists := counts[letter]; !exists {
-			counts[letter] = 1
+		if _, exists := seen[letter]; !exists {
+			seen[letter] = true
 		} else {
-			counts[letter]++
 			repeatFound = true
+			break
 		}
 	}
 	return repeatFound
