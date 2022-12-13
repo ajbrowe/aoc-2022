@@ -116,6 +116,7 @@ type Pair struct {
 
 type SignalPackets []*ListNode
 
+// Sort interface
 func (s SignalPackets) Len() int {
 	return len(s)
 }
@@ -205,7 +206,7 @@ func main() {
 
 }
 
-
+// because parsing it as JSON is just less fun!
 func parseListString(listString string) *ListNode {
 	var stack []*ListNode
 	var current *ListNode
